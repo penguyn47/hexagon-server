@@ -22,7 +22,7 @@ route.post('/register', async (req, res) => {
     }
 });
 
-route.get('/accounts', async (req, res) => {
+route.get('/all', async (req, res) => {
     try {
         const user = await User.find({});
         res.status(200).json(user);
