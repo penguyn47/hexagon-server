@@ -3,6 +3,7 @@ const Product = require('../models/product.model'); // Đảm bảo đường d�
 const cloudinary = require('../config/cloudinary'); // Đảm bảo đường dẫn đúng
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const { v4: uuidv4 } = require('uuid');
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ const upload = multer({ storage: storage });
 router.post('/new', upload.array('images', 10), async (req, res) => {
     const { name, price, description, rating, quote } = req.body;
 
-    const images = req.files.map(file => file.public_id);
+    const images = req.files.map(file => { return file.filename; });
 
     const product = new Product({
         name,
