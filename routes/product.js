@@ -6,12 +6,14 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const router = express.Router();
 
-// Cấu hình Cloudinary storage
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: {
-        folder: 'products',
-        allowed_formats: ['jpg', 'png', 'jpeg'],
+    params: async (req, file) => {
+        return {
+            folder: 'products',
+            allowed_formats: ['jpg', 'png', 'jpeg'],
+            public_id: uuidv4(),
+        };
     },
 });
 
@@ -20,7 +22,7 @@ const upload = multer({ storage: storage });
 router.post('/new', upload.array('images', 10), async (req, res) => {
     const { name, price, description, rating, quote } = req.body;
 
-    const images = req.files.map(file => file.path);
+    const images = req.files.map(file => file.public_id);
 
     const product = new Product({
         name,
